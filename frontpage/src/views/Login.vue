@@ -34,7 +34,7 @@ const fetchLoginKey=async ()=>{
             }
         })
         loginKey.value=res.data?.unikey||''
-        console.log(loginKey.value);
+        // console.log(loginKey.value);
         
     }catch(err){
         console.log("获取二维码登录key失败",err);
@@ -76,7 +76,7 @@ const startQrcheck=(key)=>{
                 timestamp:Date.now(),
                 ua:"PC"
             })             
-            console.log(res);
+            // console.log(res);
             if(res.code===803){
                 clearInterval(qrCheckTimer.value)
                 qrCheckTimer.value=null
@@ -255,4 +255,5 @@ onUnmounted(()=>{
 .login-features li + li{
     margin-top: 8px;
 }
+
 </style>
