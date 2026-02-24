@@ -1,0 +1,61 @@
+# 进入你的项目目录
+cd D:\code\Neteasedemo
+
+# 创建 .gitignore 并写入内容
+cat > .gitignore << 'EOF'
+# 后端文件夹（你指定的）
+backserver/
+api-enhanced/
+server/
+backend/
+
+# 依赖文件夹
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 环境变量
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 构建产物
+dist/
+dist-ssr/
+build/
+*.local
+
+# 日志文件
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE配置
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# 测试文件
+coverage/
+.nyc_output/
+.vscode-test/
+
+# 临时文件
+tmp/
+temp/
+.cache/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+EOF
