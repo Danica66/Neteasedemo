@@ -43,13 +43,14 @@
 
 **本项目本身不包含任何后端代码。**
 
-所有音乐数据接口均来源于开源的 **[NeteaseCloudMusicApiEnhanced/api-enhanced](https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced)**。
+所有音乐数据接口均来源于开源的 **[NeteaseCloudMusicApiEnhanced/api-enhanced](https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced)**,
+请提前下载后端代码并放在根目录下
 
 这是一个基于 Node.js 的网易云音乐 API 接口服务。在此向该项目的作者表示衷心的感谢！
 
 
 ## 🚀 快速开始 (Getting Started)
-运行本项目前,请先下载 **[node.js](https://nodejs.cn/download/)**
+运行本项目前,请先下载 **[Node.js](https://nodejs.cn/download/)**
 
 1.  进入项目根目录终端安装所有依赖:
     ```bash
@@ -63,13 +64,16 @@
 ## 📁 项目结构 (Project Structure)
 
 ```text
-frontpage/src/
-├── api/          # API 请求接口 (Axios 封装)
-├── assets/       # 静态资源 (图片、样式等)
-├── router/       # Vue Router 路由配置
-├── stores/       # Pinia 状态管理
-├── views/        # 页面视图组件
-└── App.vue       # 根组件
+netcesedemo/
+  ├── api-enhanceed/
+       ├── 存放后端代码
+  ├── frontpage/src/
+      ├── api/          # API 请求接口 (Axios 封装)
+      ├── assets/       # 静态资源 (图片、样式等)
+      ├── router/       # Vue Router 路由配置
+      ├── stores/       # Pinia 状态管理
+      ├── views/        # 页面视图组件
+      └── App.vue       # 根组件
 ```
 
 ## 📄 开源协议 (License)
@@ -81,5 +85,6 @@ frontpage/src/
 - 作者：Danica66
 - 邮箱：danica6@qq.com
 - GitHub：[Danica66](https://github.com/Danica66)
+
 
 如果这个项目对你有帮助，欢迎给个 ⭐️！
