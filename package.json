@@ -1,0 +1,22 @@
+{
+  "name": "netcesedemo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm i && npm i pnpm && cd frontpage && pnpm install && cd ../backserver && npm install",
+    "dev": "concurrently --names \"SERVER,CLIENT\" -c \"bgBlue.bold,bgGreen.bold\" \"npm run dev:node\" \"npm run dev:vue\"",
+    "dev:node": "cd backserver && node app.js",
+    "dev:vue": "cd frontpage && pnpm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "pnpm": "^10.30.2"
+  }
+}
