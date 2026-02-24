@@ -64,8 +64,8 @@
 ## 📁 项目结构 (Project Structure)
 
 ```text
-netcesedemo/
-  ├── api-enhanceed/
+Netcesedemo/
+  ├── api-enhanceed-main/
        ├── 存放后端代码
   ├── frontpage/src/
       ├── api/          # API 请求接口 (Axios 封装)
@@ -88,3 +88,4 @@ netcesedemo/
 
 
 如果这个项目对你有帮助，欢迎给个 ⭐️！
+
