@@ -11,7 +11,6 @@ backend/
 
 # 依赖文件夹
 node_modules/
-package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
