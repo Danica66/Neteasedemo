@@ -17,12 +17,14 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: process.env.PORT || 5173,
-    strictPort: true
+    strictPort: true,
+    allowedHosts: ['neteasedemo-production.up.railway.app', '.up.railway.app']  // 添加这行
   },
   preview: {
     host: '0.0.0.0',
     port: process.env.PORT || 5173,
-    strictPort: true
+    strictPort: true,
+    allowedHosts: ['neteasedemo-production.up.railway.app', '.up.railway.app']  // 添加这行
   },
   build: {
     outDir: 'dist',
