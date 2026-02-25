@@ -20,6 +20,14 @@
 
 > 一个基于 Vue 3 全家桶开发的网易云音乐网页版播放器。界面风格致敬经典，提供了基础的歌单浏览、音乐播放、搜索等功能。本项目仅用于学习和交流前端技术。
 
+## 🌐 在线体验
+
+🚀 **项目已部署上线，欢迎体验！**
+
+👉 **[https://neteasedemo-production.up.railway.app/](https://neteasedemo-production.up.railway.app/)**
+
+> 注：首次加载可能稍慢，请耐心等待。后端API使用免费服务，如遇到加载失败，稍后重试即可。
+
 ## 🛠️ 技术栈 (Tech Stack)
 
 - **前端框架:** Vue 3 (Composition API, `<script setup>`)
