@@ -40,6 +40,14 @@
 - **播放进度:** 显示当前播放时间、总时长，支持点击跳转进度条。
 - **歌词显示:** 播放时同步滚动显示歌词。
 
+
+## 📦 包管理器说明
+
+本项目采用混合包管理器：
+- **前端** (`/frontpage`)：使用 **pnpm**（本地安装，无需全局安装）
+- **后端** (`/api-enhanced-main`)：使用 **npm**
+
+
 ## 🙏 后端说明 (Backend Acknowledgement)
 
 **本项目本身不包含任何后端代码。**
@@ -52,18 +60,21 @@
 
 ## 🚀 快速开始 (Getting Started)
 运行本项目前,请先下载 **[Node.js](https://nodejs.cn/download/)**
-  ### 环境要求
+### 环境要求
   - Node.js 18+（推荐 v20.x）
   - npm 9+
-
+### 一键安装与运行
 1.  进入项目根目录终端安装所有依赖(前端使用pnpm,后端用npm):
     ```bash
     npm run install:all
     ```
-2.  一键启动全部服务(使用 `concurrently` 依赖并行运行前后端):
+2.  一键启动前后端(使用 `concurrently` 依赖并行运行前后端):
     ```bash
     npm run dev
     ```
+### 运行成功后：
+- 前端访问：`http://localhost:5173`
+- 后端 API：`http://localhost:3000`
 
 ## 🔍 已知问题 / 待办事项
 
@@ -111,7 +122,7 @@ Netcesedemo/
 ```json
 {
   "scripts": {
-    "install:all": "npm i &&  cd frontpage && npm i pnpm && pnpm install && cd ../api-enhanced-main && npm install",
+    "install:all": "npm i && cd frontpage && npm i pnpm && pnpm install && cd ../api-enhanced-main && npm install",
     "dev": "concurrently --names \"SERVER,CLIENT\" -c \"bgBlue.bold,bgGreen.bold\" \"npm run dev:node\" \"npm run dev:vue\"",
     "dev:node": "cd api-enhanced-main && node app.js",
     "dev:vue": "cd frontpage && pnpm run dev"

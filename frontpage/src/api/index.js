@@ -1,6 +1,6 @@
 import axios from 'axios'
 // 配址
-const BASE_URL='http://localhost:3000'
+const BASE_URL='https://api-enhanced-phi-dun.vercel.app'
 
 // 创建一个axios实例
 const instance=axios.create({

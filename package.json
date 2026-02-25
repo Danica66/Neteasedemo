@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install:all": "npm i &&  cd frontpage && npm i pnpm && pnpm install && cd ../api-enhanced-main && npm install",
+    "install:all": "npm i && cd frontpage && npm i pnpm && pnpm install && cd ../api-enhanced-main && npm install",
     "dev": "concurrently --names \"SERVER,CLIENT\" -c \"bgBlue.bold,bgGreen.bold\" \"npm run dev:node\" \"npm run dev:vue\"",
     "dev:node": "cd api-enhanced-main && node app.js",
     "dev:vue": "cd frontpage && pnpm run dev"
