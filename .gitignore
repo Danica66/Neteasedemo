@@ -5,7 +5,7 @@ cd D:\code\Neteasedemo
 cat > .gitignore << 'EOF'
 # 后端文件夹（你指定的）
 backserver/
-api-enhanced/
+api-enhanced-main/
 server/
 backend/
 
