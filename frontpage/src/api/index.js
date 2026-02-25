@@ -1,6 +1,6 @@
 import axios from 'axios'
 // 配址
-const BASE_URL='https://api-enhanced-phi-dun.vercel.app'
+const BASE_URL=import.meta.env.VITE_API_BASE_URL
 
 // 创建一个axios实例
 const instance=axios.create({
