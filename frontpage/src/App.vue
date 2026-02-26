@@ -44,7 +44,7 @@ const handlelogout=async()=>{
     <header class="top-nav">
       <div class="inner">
         <div class="logo">
-          <a hidefocus="true" href="/#">Danica66的网易云音乐</a>
+          <a hidefocus="true" href="/#">网易云音乐</a>
         </div>
         <nav class="nav-links">
           <RouterLink to="/">音乐大厅</RouterLink>
@@ -85,6 +85,9 @@ const handlelogout=async()=>{
   justify-content:space-evenly;
   align-items: center;
   height: 90px;
+}
+.top-nav{
+  color: rgb(196, 219, 219);
 }
 .logo{
   font-size: 24px;
@@ -169,6 +172,7 @@ const handlelogout=async()=>{
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease;
+  color: rgb(196, 219, 219)
 }
 
 </style>

@@ -91,7 +91,7 @@
 .playlist-item{
     width: 270px;
     height: 360px;
-    background: #d1c5c5;
+    background: #f7f1f1;
     align-items: center;
     border-radius: 5px;
     box-shadow: 1px 1px 5px black;

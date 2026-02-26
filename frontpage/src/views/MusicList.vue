@@ -106,11 +106,10 @@
     align-items: center;
     padding: 12px 16px;
     border-bottom: 1px solid rgb(46, 7, 7);
-    color: #666;
     font-size: 14px;
 }
 .track-item:hover{
-    background-color: rgb(46, 7, 7);
+    background-color: rgba(77, 77, 77, 0.637);
     transition: background-color 0.3s ease;
     color: white;
 }
@@ -124,7 +123,6 @@
 }
 .track-name{
     font-size: 16px;
-    color: white;
 }
 .track-album{
     margin-right: 10px;

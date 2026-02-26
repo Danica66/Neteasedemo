@@ -307,14 +307,14 @@
     transform: translateY(-50%);
 }
 .singer-arrow {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(170, 148, 148, 0.5);
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 50px;
 }
 .singer-arrow:hover {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(72, 62, 62, 0.7);
     transition: all 0.3s ease;
 }
 

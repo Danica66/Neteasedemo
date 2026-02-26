@@ -286,6 +286,7 @@
 .song-meta{
     margin-top: 20px;
     text-align:center;
+    color: rgb(214, 209, 209);
 }
 .song-title{
     margin: 0;
