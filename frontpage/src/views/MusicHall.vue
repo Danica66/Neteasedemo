@@ -27,6 +27,9 @@
             const res=await api.get('/personalized/newsong',{limit:10})
             const newsonglist=res.result||[]
             newsongs.value = parsesonglist(newsonglist)
+            // console.log(newsonglist);
+            // console.log(newsongs.value);
+            
         } catch (error) {
             console.log("获取推荐新音乐失败:",error);
         }

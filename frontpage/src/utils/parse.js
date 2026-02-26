@@ -13,7 +13,7 @@ export const parsesong = (song,arjoinstr='/') => {
     id: song.id,
     name: song.name || '未知歌曲',
     // 统一处理 ar 或 artists 字段
-    artist: parseartist(song.ar || song.artists,arjoinstr),
+    artist: parseartist(song.song.artists || song.artists ,arjoinstr),
     duration: song.dt || song.duration || 0,
     album: (song.al || song.album)?.name || '未知专辑',
     cover: (song.al || song.album || song )?.picUrl
