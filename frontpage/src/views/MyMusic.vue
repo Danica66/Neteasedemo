@@ -10,7 +10,7 @@
     const userstore=useUserStore()
 
 
-    //没歌登录
+    //跳转登录
     const handlegologin=()=>{
         router.push("/login")
     }
@@ -44,14 +44,14 @@
 <template>
     <div class="mymusic-page">
         <div class="inner">
-            <h2 class="title">我的音乐</h2>
             <div v-if="!userstore.isLoggedIn" class="login-hint">
                 <p class="hint-text">没登录哪来的音乐 ,->
-                <button class="hint-btn" type="button" @click="handlegologin">去登录</button>
-                <-
+                    <button class="hint-btn" type="button" @click="handlegologin">去登录</button>
+                    <-
                 </p>
             </div>
             <div v-else>
+                <h2 class="title">我的音乐</h2>
                 <div v-if="!playlists.length" class="tip">没歌</div>
                 <ul v-else class="playlist-list">
                     <li class="playlist-item" @click="handleopenplaylist(item.id)" v-for="item in playlists" :key="item.id">

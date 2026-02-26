@@ -43,13 +43,15 @@ const handlelogout=async()=>{
   <div class="app">
     <header class="top-nav">
       <div class="inner">
-        <div class="logo">
-          <a hidefocus="true" href="/#">网易云音乐</a>
+        <div class="logo-links">
+          <div class="logo">
+            <a hidefocus="true" href="/#">网易云音乐</a>
+          </div>
+          <nav class="nav-links">
+            <RouterLink to="/">音乐大厅</RouterLink>
+            <RouterLink to="/Mymusic">我的音乐</RouterLink>
+          </nav>
         </div>
-        <nav class="nav-links">
-          <RouterLink to="/">音乐大厅</RouterLink>
-          <RouterLink to="/Mymusic">我的音乐</RouterLink>
-        </nav>
         <div class="nav-actions">
           <div class="searchbox">
             <input type="text" class="search-input" placeholder="搜索歌曲/歌手/专辑" v-model="searchKeyword" @keyup.enter="handlesearch" />
@@ -82,7 +84,7 @@ const handlelogout=async()=>{
 }
 .inner {
   display: flex;
-  justify-content:space-evenly;
+  justify-content:space-between;
   align-items: center;
   height: 90px;
 }
@@ -90,8 +92,14 @@ const handlelogout=async()=>{
   color: rgb(196, 219, 219);
 }
 .logo{
+  padding-left: 100px;;
   font-size: 24px;
   font-weight: bold;
+}
+.logo-links{
+  display: flex;
+  align-items: center;
+  gap:20px;
 }
 .nav-links a {
   padding: 5px 10px;
