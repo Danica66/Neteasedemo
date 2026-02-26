@@ -1,21 +1,14 @@
 <script setup>
     import {useRoute, useRouter} from 'vue-router'
     import { ref,computed, onMounted } from 'vue'
-
+    import { formatetime } from '@/util/formattime'
     import api from '../api'
+import { parsesonglist } from '@/util/parse'
     const route=useRoute()
     const router=useRouter()
 
     //加载状态
     const loading=ref(false)
-    
-
-    //时间转换
-    const formatDuration=(durationMs)=>{
-    const minutes=Math.floor(durationMs/1000/60)
-    const seconds=Math.floor((durationMs/1000)%60)
-        return `${minutes}:${seconds.toString().padStart(2,'0')}`
-    }
     
         
     // 歌单详情数据
@@ -31,15 +24,8 @@
             // 获取歌单详情
             const res=await api.get('/playlist/detail',{id})
             playlistName.value=res.playlist?.name||'歌单'
-            tracks.value=res.playlist.tracks?.map((track)=>{
-                return {
-                    id:track.id,
-                    name:track.name,
-                    artist:(track.ar||track.artists||[]).map((a)=>a.name).join('/'),
-                    durationMs:track.dt||track.duration||0,
-                    album:(track.al||track.album).name||'',
-                }
-            })||[]
+            const songlist=res.playlist?.tracks||[]
+            tracks.value=parsesonglist(songlist)
         } catch (error) {
             console.log("获取歌单详情失败:",error);
         }finally{
@@ -76,7 +62,7 @@
                     </div>
                     <div class="track-extra">
                         <span class="track-album">{{track.album}}</span>
-                        <span class="track-duration">{{formatDuration(track.durationMs)}}</span>
+                        <span class="track-duration">{{formatetime(track.duration)}}</span>
                     </div>
                 </li>
             </ul>

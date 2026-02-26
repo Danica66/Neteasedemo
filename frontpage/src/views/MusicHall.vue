@@ -1,23 +1,18 @@
 <script setup>
-    import { useRouter,useRoute } from 'vue-router'
+    import { useRouter } from 'vue-router'
     import api from '../api'
     import { ref, onMounted , computed } from 'vue'
+    import { parseplaylistList, parsesonglist } from '@/util/parse'
 
     const router=useRouter()
-    const route=useRoute()
 
     // 歌单列表
     const playList = ref([])
     const fetchPlayList = async () => {
         try {
             const res=await api.get('/personalized',{limit:10})
-            playList.value = (res.result||[]).map((item)=>({
-                id:item.id,
-                title:item.name,
-                desc:item.copywriter||'',
-                cover:item.picUrl,
-                
-            }))
+            const playlists=res.result||[]
+            playList.value = parseplaylistList(playlists)
         } catch (error) {
             console.log("获取推荐歌单失败:",error);
             
@@ -30,17 +25,13 @@
     const fetchNewsongs = async () => {
         try {
             const res=await api.get('/personalized/newsong',{limit:10})
-            newsongs.value = (res.result||[]).map((item)=>({
-                id:item.id,
-                name:item.name,
-                cover:item.picUrl,
-                artist:item.song?.artists?.map((a)=>a.name).join('/')||'',
-            }))
+            const newsonglist=res.result||[]
+            newsongs.value = parsesonglist(newsonglist)
         } catch (error) {
             console.log("获取推荐新音乐失败:",error);
         }
     }
-
+ 
 
     //歌手榜单
     const singerRank=ref([])
@@ -57,7 +48,7 @@
             console.log("获取歌手榜单失败:",error);
         }
     }
-
+    //处理轮播图左右按钮
     const currentSingerSlide=ref(0)
     const SINGER_PAGE_SIZE=5
     const singerSlides=computed(()=>{
@@ -130,7 +121,7 @@
                         <img :src="item.cover" :alt="item.title" class="cover-image" />
                     </div>
                     <div class="info">
-                        <p class="title">{{ item.title }}</p>
+                        <p class="title">{{ item.name }}</p>
                         <p class="desc">{{ item.desc }}</p>
                     </div>
                 </li>

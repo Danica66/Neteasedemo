@@ -2,6 +2,8 @@
     import { ref,onMounted,computed,watch } from 'vue'
     import { useRoute,useRouter } from 'vue-router';
     import api from '../api'
+    import { formatetime } from '@/util/formattime';
+    import { parsesonglist } from '@/util/parse';
 
     const route=useRoute()
     const router=useRouter()
@@ -13,18 +15,11 @@
     const keyword =computed(()=>(route.query.keyword ||'').toString())
     const fetchSearchResult=async()=>{
         try {
-            songlist.value=[]
             loading.value=true
             const keywords=keyword.value.trim()
             const res=await api.get("/search",{keywords,limit:100})
             const songs=res.result?.songs||[]
-            songlist.value=songs.map((s)=>({
-                id:s.id,
-                name:s.name,
-                artist:(s.artists||[]).map((a)=>a.name).join("/"),
-                album:s.album.name||[],
-                duration:s.duration||0,
-            }))
+            songlist.value=parsesonglist(songs)
         } catch (error) {
             console.log("搜索失败",err);
         }finally{
@@ -33,12 +28,6 @@
     }
 
 
-    //时间转换
-    const formatDuration=(durationMs)=>{
-    const minutes=Math.floor(durationMs/1000/60)
-    const seconds=Math.floor((durationMs/1000)%60)
-        return `${minutes}:${seconds.toString().padStart(2,'0')}`
-    }
     
     //点击放歌
     const handleplay=(id)=>{
@@ -81,7 +70,7 @@
                     </div>
                     <div class="song-extra">
                         <div class="song-album">{{ song.album }}</div>
-                        <div class="song-duration">{{ formatDuration(song.duration) }}</div>
+                        <div class="song-duration">{{ formatetime(song.duration) }}</div>
                     </div>
                 </li>
             </ul>

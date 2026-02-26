@@ -2,6 +2,7 @@
     import{ref,onMounted,computed,watch,nextTick} from 'vue'
     import { useRoute } from 'vue-router'
     import api from '../api'
+    import { formatetime } from '@/util/formattime'
     const route = useRoute()
 
     // 获取歌曲
@@ -39,8 +40,8 @@
             const raw=res.lrc?.lyric||''
             lyrics.value=parselyric(raw)
             timestamp.value=parsetimestamp(raw)
-            console.log(lyrics.value);            
-            console.log(timestamp.value);
+            // console.log(lyrics.value);            
+            // console.log(timestamp.value);
             
         }catch(err){
             console.log("获取歌词失败",err)
@@ -94,27 +95,7 @@
         duration.value=audio.duration||0
         currenttime.value=audio.currentTime||0    
     }
-    //时间格式化
-    const formatetime=(sec)=>{
-        if(!sec||!Number.isFinite(sec)) return "00:00"
-        const s=Math.floor(sec)
-        const m=Math.floor(s/60)
-        const rs=s%60
-        const mm=m.toString().padStart(2,"0")
-        const ss=rs.toString().padStart(2,"0")
-        return `${mm}:${ss}`
-    }
 
-    const formatetimestamp=(sec)=>{
-        if (!sec||!Number.isFinite(sec)) return "[00:00.000]"
-        const minutes = Math.floor(sec / 60)
-        const seconds = Math.floor(sec % 60)
-        const milliseconds = Math.floor((sec % 1) * 1000)
-        const mm = minutes.toString().padStart(2, '0')
-        const ss = seconds.toString().padStart(2, '0')
-        const ms = milliseconds.toString().padStart(3, '0')        
-        return `[${mm}:${ss}.${ms}]`
-    }
     //滚动歌词
     const currentindex=ref(0)
     const findExactLyricIndex = (currentTime) => {
@@ -155,7 +136,7 @@
         currenttime.value=audio.currentTime
         duration.value=audio.duration
         //找歌词对应的currentindex
-        currentindex.value=findExactLyricIndex(formatetimestamp(currenttime.value))
+        currentindex.value=findExactLyricIndex(formatetime(currenttime.value*1000,1))
     }
     const handleprogressclick=(event)=>{
         const bar=event.currentTarget
@@ -223,11 +204,11 @@
                     <button class="btn-circle btn-large" @click="handletoggleplay">{{ isPlaying?"⏸":"▶" }}</button>
                 </div>
                 <div class="progress-wrap">
-                    <span class="time-label">{{ formatetime(currenttime) }}</span>
+                    <span class="time-label">{{ formatetime(currenttime*1000) }}</span>
                     <div class="progress-bar" @click="handleprogressclick">
                         <div class="progress-inner" :style="{width:duration ? `${(currenttime/duration)*100}%` : '0%' }"></div>
                     </div>
-                    <span class="time-label">{{ formatetime(duration) }}</span>
+                    <span class="time-label">{{ formatetime(duration*1000) }}</span>
                 </div>
             <audio :src="audioUrl" ref="audioref" v-if="audioUrl" class="audio-hidden" @loadedmetadata="handleloadedmetadata" @timeupdate="handletimeupdate" @ended="handleaudioended"></audio>
             </div>

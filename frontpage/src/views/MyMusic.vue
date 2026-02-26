@@ -1,12 +1,12 @@
 <script setup>
-    import {ref,computed,onMounted} from 'vue'
+    import {ref,onMounted} from 'vue'
     import { useUserStore } from '@/stores/user';
     import api from '../api'
-    import { useRouter,useRoute } from 'vue-router';
+    import { useRouter} from 'vue-router';
+import { parseplaylistList } from '@/util/parse';
 
     
     const router=useRouter()
-    const route=useRoute()
     const userstore=useUserStore()
 
 
@@ -31,12 +31,8 @@
         try{
             const uid=userstore.user?.id
             const res=await api.get("/user/playlist",{uid})
-            playlists.value=res.playlist?.map((item)=>({
-                id:item.id,
-                name:item.name,
-                cover:item.coverImgUrl,
-                trackCount:item.trackCount
-            }))||[]
+            const playlist=res.playlist||[]
+            playlists.value=parseplaylistList(playlist)
         }catch(err){
             console.log("获取歌单失败",err);
         }

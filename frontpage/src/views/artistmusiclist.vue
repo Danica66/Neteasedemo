@@ -1,7 +1,9 @@
 <script setup>
+    import { formatetime } from '@/util/formattime'
     import api from '../api'
     import {ref,onMounted,computed} from 'vue'
     import { useRoute,useRouter } from 'vue-router' 
+    import { parsesonglist } from '@/util/parse'
 
     const playlist=ref([])
     const router=useRouter()
@@ -17,29 +19,15 @@
     const loading=ref(false)
     
 
-    //时间转换
-    const formatDuration=(durationMs)=>{
-    const minutes=Math.floor(durationMs/1000/60)
-    const seconds=Math.floor((durationMs/1000)%60)
-        return `${minutes}:${seconds.toString().padStart(2,'0')}`
-    }
-
     //拿歌
     const fetchartistsong=async(id)=>{
         try{
             loading.value=true
             const res=await api.get('/artist/songs',{id,limit:1000})
-            console.log(res);
-            console.log(artistname.value);
-            playlist.value=res.songs.map((song)=>{
-                return {
-                    id:song.id,
-                    name:song.name,
-                    artist:(song.ar||song.artists||[]).map((a)=>a.name).join('/'),
-                    durationMs:song.dt||song.duration||0,
-                    album:(song.al||song.album).name||'',
-                }
-            })||[]
+            // console.log(res);
+            // console.log(artistname.value);
+            const songlist=res.songs||[]
+            playlist.value=parsesonglist(songlist)
         }catch(err){
             console.log("获取歌手歌曲失败",err);
         }finally{
@@ -49,7 +37,7 @@
     }
 
     //跳转播放
-    const handlePlaySong=(id)=>{
+    const handlePlaySong=(id)=>{ 
         if(!id) return
         router.push({
             name:'player',
@@ -78,7 +66,7 @@
                     </div>
                     <div class="song-extra">
                         <span class="song-album">{{song.album}}</span>
-                        <span class="song-duration">{{formatDuration(song.durationMs)}}</span>
+                        <span class="song-duration">{{formatetime(song.duration)}}</span>
                     </div>
                 </li>
             </ul>
