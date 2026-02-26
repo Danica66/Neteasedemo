@@ -2,7 +2,7 @@
     import { useRouter } from 'vue-router'
     import api from '../api'
     import { ref, onMounted , computed } from 'vue'
-    import { parseplaylistList, parsesonglist } from '@/util/parse'
+    import { parseplaylistList, parsesonglist } from '@/utils'
 
     const router=useRouter()
 

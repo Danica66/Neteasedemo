@@ -146,6 +146,7 @@ onMounted(()=>{
     refreshlogin()
     fetchLoginKey()
 })
+
 //清除轮询器
 onUnmounted(()=>{
     if(qrCheckTimer.value){

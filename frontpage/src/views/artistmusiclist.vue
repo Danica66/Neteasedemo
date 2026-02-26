@@ -1,9 +1,9 @@
 <script setup>
-    import { formatetime } from '@/util/formattime'
+    import { formatetime } from '@/utils/formattime'
     import api from '../api'
     import {ref,onMounted,computed} from 'vue'
     import { useRoute,useRouter } from 'vue-router' 
-    import { parsesonglist } from '@/util/parse'
+    import { parsesonglist } from '@/utils'
 
     const playlist=ref([])
     const router=useRouter()

@@ -3,7 +3,7 @@
     import { useUserStore } from '@/stores/user';
     import api from '../api'
     import { useRouter} from 'vue-router';
-import { parseplaylistList } from '@/util/parse';
+    import { parseplaylistList } from '@/utils';
 
     
     const router=useRouter()

@@ -2,10 +2,9 @@
     import{ref,onMounted,computed,watch,nextTick} from 'vue'
     import { useRoute } from 'vue-router'
     import api from '../api'
-    import { formatetime } from '@/util/formattime'
-    import { parsesong,parselyric,parsetimestamp } from '@/util/parse'
+    import { formatetime,parsesong,parselyric,parsetimestamp } from '@/utils'
     const route = useRoute()
-
+    
     // 获取歌曲
     const song=ref({})
     const id = computed(() => route.query.id)
@@ -20,7 +19,6 @@
         }
     }
     
-
 
     //获取歌词
     const lyrics=ref([])
@@ -39,6 +37,7 @@
             lyrics.value=[]
         }
     }
+
 
 
 
@@ -162,7 +161,7 @@
                         <h2 class="song-title">{{ song.name }}</h2>
                         <p class="song-artist">{{ song.artist }}</p>
                         <p class="song-album">{{ song.album }}</p>
-                        <p>!!!无vip播放vip歌曲只有30秒!!!</p>
+                        <p>───无vip,播放vip歌曲只有30秒───</p>
                     </div>
                 </div>
                 <div class="player-right">

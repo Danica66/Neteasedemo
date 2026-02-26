@@ -96,6 +96,7 @@ Netcesedemo/
 │   │   ├── assets/               # 静态资源
 │   │   ├── router/               # 路由配置
 │   │   ├── stores/               # 状态管理
+|   |   ├── utils/                # 工具函数
 │   │   ├── views/                # 页面视图
 │   │   └── App.vue               
 │   └── ...

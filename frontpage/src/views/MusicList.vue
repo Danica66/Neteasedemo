@@ -1,9 +1,8 @@
 <script setup>
     import {useRoute, useRouter} from 'vue-router'
     import { ref,computed, onMounted } from 'vue'
-    import { formatetime } from '@/util/formattime'
+    import { formatetime,parsesonglist  } from '@/utils'
     import api from '../api'
-import { parsesonglist } from '@/util/parse'
     const route=useRoute()
     const router=useRouter()
 

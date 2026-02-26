@@ -2,8 +2,7 @@
     import { ref,onMounted,computed,watch } from 'vue'
     import { useRoute,useRouter } from 'vue-router';
     import api from '../api'
-    import { formatetime } from '@/util/formattime';
-    import { parsesonglist } from '@/util/parse';
+    import { formatetime,parsesonglist } from '@/utils';
 
     const route=useRoute()
     const router=useRouter()
