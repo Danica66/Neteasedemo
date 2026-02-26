@@ -3,29 +3,20 @@
     import { useRoute } from 'vue-router'
     import api from '../api'
     import { formatetime } from '@/util/formattime'
+    import { parsesong,parselyric,parsetimestamp } from '@/util/parse'
     const route = useRoute()
 
     // 获取歌曲
-    const songTitle=ref("正在播放的歌曲")
-    const songArtist=ref("歌手姓名")
-    const songAlbum=ref("专辑名称")
-    const songCover=ref("https://via.placeholder.com/260x260.png?text=Cover")
+    const song=ref({})
     const id = computed(() => route.query.id)
     const fetchSongDetail=async(ids)=>{
         try{
             const res=await api.get('/song/detail',{ids})
             const detail=(res.songs||[])[0]
-            songTitle.value=detail.name||"未知歌曲"
-            songArtist.value=(detail.ar||detail.artists||[]).map(a=>a.name).join(",")||"未知歌手"
-            songAlbum.value=(detail.al||detail.album)?.name||"未知专辑"
-            songCover.value=(detail.al||detail.album)?.picUrl||songCover.value
-
+            song.value=parsesong(detail,',')
+            // console.log(song.value);
         }catch(error){
             console.error('获取歌曲详情失败',error)
-            songTitle.value="正在播放的歌曲"
-            songArtist.value="歌手姓名"
-            songAlbum.value="专辑名称"
-            songCover.value="https://via.placeholder.com/260x260.png?text=Cover"
         }
     }
     
@@ -48,20 +39,7 @@
             lyrics.value=[]
         }
     }
-    //解析歌词
-    const parselyric=(raw='')=>{
-        return raw.split("\n").map((line)=>line.trim()).filter((line)=>line).map((line)=>{
-            const text=line.replace(/^\[[^\]]*]/g,'').trim()
-            return text||'~♫♫♫~'
-        })
-    }
-    //解析时间戳
-    const parsetimestamp=(raw='')=>{
-        return raw.split("\n").map(line => line.trim()).filter(line => line).map(line => {
-            const match = line.match(/^\[[^\]]+\]/)
-            return match[0]
-        })
-    }
+
 
 
 
@@ -177,13 +155,13 @@
                 <div class="player-left">
                     <div class="cover-wrap">
                         <div class="cover-disc">
-                            <img class="cover-img" :src="songCover" alt="专辑封面">
+                            <img class="cover-img" :src="song.cover" alt="专辑封面">
                         </div>
                     </div>
                     <div class="song-meta">
-                        <h2 class="song-title">{{ songTitle }}</h2>
-                        <p class="song-artist">{{ songArtist }}</p>
-                        <p class="song-album">{{ songAlbum }}</p>
+                        <h2 class="song-title">{{ song.name }}</h2>
+                        <p class="song-artist">{{ song.artist }}</p>
+                        <p class="song-album">{{ song.album }}</p>
                         <p>!!!无vip播放vip歌曲只有30秒!!!</p>
                     </div>
                 </div>

@@ -1,19 +1,19 @@
 //解析歌手
-export const parseartist=(artists,joinstr='/')=>{
+export const parseartist=(artists,joinstr)=>{
     if (!artists || !Array.isArray(artists) || artists.length === 0) {
     return '未知歌手'
   }
   return artists.map(a => a.name).join(joinstr)
 }
 //解析歌曲
-export const parsesong = (song) => {
+export const parsesong = (song,arjoinstr='/') => {
   if (!song) return null
   
   return {
     id: song.id,
     name: song.name || '未知歌曲',
     // 统一处理 ar 或 artists 字段
-    artist: parseartist(song.ar || song.artists),
+    artist: parseartist(song.ar || song.artists,arjoinstr),
     duration: song.dt || song.duration || 0,
     album: (song.al || song.album)?.name || '未知专辑',
     cover: (song.al || song.album || song )?.picUrl
@@ -44,3 +44,18 @@ export const parseplaylistList = (playlists = []) => {
   return playlists.map(parseplaylist).filter(p => p !== null)
 }
 
+//解析歌词
+export const parselyric=(raw='')=>{
+    return raw.split("\n").map((line)=>line.trim()).filter((line)=>line).map((line)=>{
+        const text=line.replace(/^\[[^\]]*]/g,'').trim()
+        return text||'~♫♫♫~'
+    })
+}
+
+//解析时间戳[mm:ss.ms]
+export const parsetimestamp=(raw='')=>{
+    return raw.split("\n").map(line => line.trim()).filter(line => line).map(line => {
+        const match = line.match(/^\[[^\]]+\]/)
+        return match[0]
+    })
+}
