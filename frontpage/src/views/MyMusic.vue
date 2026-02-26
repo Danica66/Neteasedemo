@@ -46,8 +46,10 @@
         <div class="inner">
             <h2 class="title">我的音乐</h2>
             <div v-if="!userstore.isLoggedIn" class="login-hint">
-                <p class="hint-text">没登录哪来的音乐,去登录</p>
+                <p class="hint-text">没登录哪来的音乐 ,->
                 <button class="hint-btn" type="button" @click="handlegologin">去登录</button>
+                <-
+                </p>
             </div>
             <div v-else>
                 <div v-if="!playlists.length" class="tip">没歌</div>
@@ -67,6 +69,17 @@
     </div>
 </template>
 <style scoped>
+.hint-btn{
+  padding: 5px 10px;
+  transition: all 0.3s ease;
+  border-radius: 20px;
+  background-color: transparent;
+  border: 0;
+}
+.hint-btn:hover{
+    background-color: #ff0000;
+    color:white
+}
 .mymusic-page{
     min-height: calc(100vh - 90px);
     padding: 24px 32px;
