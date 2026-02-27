@@ -7,15 +7,15 @@
 </p>
 <br>
 <p align="center">
-  <img src="./demoimg/demo2.png" alt="播放界面预览" width="600">
+  <img src="./demoimg/demo2.png" alt="歌单详情预览" width="600">
   <br>
-  <em>播放界面预览</em>
+  <em>歌单详情预览</em>
 </p>
 <br>
 <p align="center">
-  <img src="./demoimg/demo3.png" alt="歌单详情预览" width="600">
+  <img src="./demoimg/demo3.png" alt="播放界面预览" width="600">
   <br>
-  <em>歌单详情预览</em>
+  <em>播放界面预览</em>
 </p>
 
 > 一个基于 Vue 3 全家桶开发的网易云音乐网页版播放器。界面风格致敬经典，提供了基础的歌单浏览、音乐播放、搜索等功能。本项目仅用于学习和交流前端技术。
