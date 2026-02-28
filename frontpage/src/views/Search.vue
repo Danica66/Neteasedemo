@@ -2,11 +2,9 @@
     import { ref,onMounted,computed,watch } from 'vue'
     import { useRoute,useRouter } from 'vue-router';
     import api from '../api'
-    import { formatetime,parsesonglist } from '@/utils';
-
+    import { parsesonglist } from '@/utils';
+    import Songlist from '@/components/songlist.vue';
     const route=useRoute()
-    const router=useRouter()
-
 
     //搜歌
     const songlist=ref([])
@@ -20,20 +18,10 @@
             const songs=res.result?.songs||[]
             songlist.value=parsesonglist(songs)
         } catch (error) {
-            console.log("搜索失败",err);
+            console.log("搜索失败",error);
         }finally{
             loading.value=false
         }
-    }
-
-
-    
-    //点击放歌
-    const handleplay=(id)=>{
-        router.push({
-            name:"player",
-            query:{id}
-        })
     }
 
 
@@ -45,9 +33,6 @@
         }
     )
 
-
-
-
     onMounted(()=>{
         fetchSearchResult()
     })  
@@ -55,73 +40,13 @@
 
 
 <template>
-    <div class="search-page">
+    <div class="page">
         <div class="inner">
-            <div class="title">搜索结果(展示100条)</div>
-            <p class="keyword" >关键字:{{ keyword }}</p>
-            <div v-if="loading" class="tip">正在搜索中</div>
-            <div v-else-if="keyword&&!songlist.length" class="tip">找不到与{{ keyword }}相关内容</div>
-            <ul v-else class="song-list">
-                <li @click="handleplay(song.id)" v-for="song in songlist" :key="song.id" class="song-item">
-                    <div class="song-main">
-                        <span class="song-name">{{ song.name }}</span>
-                        <span class="song-artist">{{ song.artist }}</span>
-                    </div>
-                    <div class="song-extra">
-                        <div class="song-album">{{ song.album }}</div>
-                        <div class="song-duration">{{ formatetime(song.duration) }}</div>
-                    </div>
-                </li>
-            </ul>
+            <Songlist :songlist="songlist" :title="'搜索结果(展示100条)'" :tip="`找不到与“${keyword}”相关内容`" :loading="loading">
+                <template #l-title>
+                    <p class="keyword" >关键字:{{ keyword }}</p>
+                </template>
+            </Songlist>
         </div>
     </div>
-    
 </template>
-
-
-<style scoped>
-.search-page{
-    min-height: calc(100vh - 90px);
-    padding: 24px 32px;
-    box-sizing: border-box;
-}
-.title{
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 16px;
-}
-.tip{
-    font-size: 18px;
-    text-align: center;
-    margin-top: 40px;
-}
-.keyword{
-    margin-bottom: 20px;
-}
-.song-item{
-    display: flex;
-    align-items: center;
-    padding: 12px 5px;
-    border-bottom: 1px solid rgb(46, 7, 7);
-    font-size: 14px;
-}
-.song-item:hover{
-    background-color: rgba(77, 77, 77, 0.637);
-    transition: background-color 0.3s ease;
-    color: white;
-}
-.song-main{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-.song-extra{
-    display: flex;
-}
-.song-name{
-    font-size: 16px;
-}
-.song-album{
-    margin-right: 10px;
-}
-</style>

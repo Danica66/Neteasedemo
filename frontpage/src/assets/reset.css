@@ -31,7 +31,11 @@ img{
     height: auto;
     vertical-align: middle;
 }
-
+.page{
+    min-height: calc(100vh - 90px);
+    padding: 24px 32px;
+    box-sizing: border-box;
+}
 input,button,textarea,select{
     font-family: inherit;
     font-size: inherit;

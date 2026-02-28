@@ -148,7 +148,7 @@
 </script>
 
 <template>
-    <div class="player-page">
+    <div class="page">
         <div class="inner">
             <div class="player-main">
                 <div class="player-left">
@@ -194,13 +194,11 @@
 </template>
 
 <style scoped>
-.player-page{
-    min-height:calc(100vh - 90px);
+.page{
     background: radial-gradient(circle at top left,#2b2b2b,#000);
     display: flex;
     justify-content: center;
     padding: 40px 0;
-    box-sizing: border-box;
 }
 .inner{
     display: flex;

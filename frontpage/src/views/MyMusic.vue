@@ -42,7 +42,7 @@
     })
 </script>
 <template>
-    <div class="mymusic-page">
+    <div class="page">
         <div class="inner">
             <div v-if="!userstore.isLoggedIn" class="login-hint">
                 <p class="hint-text">没登录哪来的音乐 ,->
@@ -79,10 +79,6 @@
 .hint-btn:hover{
     background-color: #ff0000;
     color:white
-}
-.mymusic-page{
-    min-height: calc(100vh - 90px);
-    padding: 24px 32px;
 }
 .title{
     margin-bottom: 16px;

@@ -11,7 +11,7 @@ const userstore=useUserStore()
 const refreshlogin=async()=>{
     try {
         await api.get('/login/refresh')
-    } catch (error) {
+    } catch (err) {
         console.log(err);
         
     }
