@@ -64,6 +64,7 @@ Netcesedemo/
 │   ├── src/
 │   │   ├── api/                  # API 请求接口
 │   │   ├── assets/               # 静态资源
+│   │   ├── components/           # 公共组件
 │   │   ├── router/               # 路由配置
 │   │   ├── stores/               # 状态管理
 |   |   ├── utils/                # 工具函数
