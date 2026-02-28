@@ -58,3 +58,19 @@ export const parsetimestamp=(raw='')=>{
         return match[0]
     })
 }
+
+
+//解析歌手
+export const parsesinger=(singer,index)=>{
+  return {
+      id:singer.id,
+      name:singer.name,
+      rank:index+1,
+      avatar:singer.picUrl,
+  }
+}
+
+//解析歌手数组
+export const parsesingerlist=(singers=[])=>{
+  return singers.map(parsesinger).filter(p => p !== null)
+}

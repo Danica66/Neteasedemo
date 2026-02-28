@@ -2,7 +2,7 @@
     import { useRouter } from 'vue-router'
     import api from '../api'
     import { ref, onMounted , computed } from 'vue'
-    import { parseplaylistList, parsesonglist } from '@/utils'
+    import { parseplaylistList, parsesingerlist, parsesonglist } from '@/utils'
 
     const router=useRouter()
 
@@ -41,12 +41,8 @@
     const fetchSingerRank = async () => {
         try {
             const res=await api.get('/top/artists',{limit:100})
-            singerRank.value = (res.artists||[]).map((artist,index)=>({
-                id:artist.id,
-                name:artist.name,
-                rank:index+1,
-                avatar:artist.picUrl,
-            }))
+            const singerlist=res.artists||[]
+            singerRank.value = parsesingerlist(singerlist)
         } catch (error) {
             console.log("获取歌手榜单失败:",error);
         }
