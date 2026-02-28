@@ -1,13 +1,8 @@
 <script setup>
-    import {useRouter} from 'vue-router'
-    import { formatetime } from '@/utils';
-
-    const router=useRouter()
-
-
+    import { formatetime,handlePlaySong } from '@/utils';
 
     //接收数据
-    const { songlist=[],title,loading,tip,isindex }=defineProps({
+    const props=defineProps({
         title:{
             type:String,
             default:""
@@ -29,19 +24,6 @@
             default:false
         }
     })
-    // console.log(title);
-    // console.log(songlist);
-    // console.log(loading);
-    
-    
-
-    //跳转播放
-    const handlePlaySong=(id)=>{
-        router.push({
-            name:"player",
-            query:{id}
-        })
-    }
 
 
 </script>

@@ -1,10 +1,7 @@
 <script setup>
-    import { useRouter } from 'vue-router'
     import api from '../api'
     import { ref, onMounted , computed } from 'vue'
-    import { parseplaylistList, parsesingerlist, parsesonglist } from '@/utils'
-
-    const router=useRouter()
+    import { parseplaylistList, parsesingerlist, parsesonglist,handlePlaySong,handleSingerPlaylist,handlePlaylist } from '@/utils'
 
     // 歌单列表
     const playList = ref([])
@@ -68,38 +65,6 @@
         currentSingerSlide.value=(currentSingerSlide.value+1)%singerSlides.value.length
     }
 
-
-
-    //歌手榜单交互
-    const handlesearchsinger=(id,name)=>{
-        if(!id) return
-        router.push({
-                name:'artistmusic',
-                query:{
-                    id:id,
-                    name:name
-                },
-        })
-    }
-    // 点击歌单项
-    const handlePlaylistClick=(id)=>{
-        if(!id) return
-        router.push({
-                name:'musiclist',
-                query:{id}
-        })
-    }
-
-    // 播放歌曲
-    const handlePlaySong=(id)=>{
-        if(!id) return
-        router.push({
-            name:'player',
-            query:{id}
-        })
-    }
-
-
     // 页面加载时获取数据
     onMounted(()=>{
         fetchPlayList()
@@ -115,7 +80,7 @@
             <!-- 推荐歌单 -->
             <h2 class="section-title">推荐歌单</h2>
             <ul class="playlist-list">
-                <li v-for="item in playList" :key="item.id" class="playlist-item" @click="handlePlaylistClick(item.id)">
+                <li v-for="item in playList" :key="item.id" class="playlist-item" @click="handlePlaylist(item.id)">
                     <div class="cover-wrapper">
                         <img :src="item.cover" :alt="item.title" class="cover-image" />
                     </div>
@@ -144,7 +109,7 @@
                 <div class="singer-carousel-track">
                     <div v-for="(slide,index) in singerSlides" :key="index" class="singer-slide" v-show="index==currentSingerSlide">
                         <ul class="singer-list">
-                            <li v-for="singer in slide" :key="singer.id" class="singer-item" @click="handlesearchsinger(singer.id,singer.name)">
+                            <li v-for="singer in slide" :key="singer.id" class="singer-item" @click="handleSingerPlaylist(singer.id,singer.name)">
                                 <div class="singer-avatar">
                                     <img :src="singer.avatar" :alt="singer.name">
                                 </div>

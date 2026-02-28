@@ -1,5 +1,5 @@
 <script setup>
-    import {useRoute, useRouter} from 'vue-router'
+    import {useRoute} from 'vue-router'
     import { ref,computed, onMounted } from 'vue'
     import { parsesonglist  } from '@/utils'
     import api from '../api'

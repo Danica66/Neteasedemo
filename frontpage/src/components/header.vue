@@ -2,11 +2,10 @@
 import { RouterLink } from 'vue-router'
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { useRoute,useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import api from '@/api'
 
 const userstore=useUserStore()
-const route=useRoute()
 const router=useRouter()
 
 // 搜索关键词

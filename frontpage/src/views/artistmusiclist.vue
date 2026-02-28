@@ -1,7 +1,7 @@
 <script setup>
     import api from '../api'
     import {ref,onMounted,computed} from 'vue'
-    import { useRoute,useRouter } from 'vue-router' 
+    import { useRoute } from 'vue-router' 
     import { parsesonglist } from '@/utils'
     import Songlist from '@/components/songlist.vue'
 

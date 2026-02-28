@@ -1,6 +1,6 @@
 <script setup>
     import { ref,onMounted,computed,watch } from 'vue'
-    import { useRoute,useRouter } from 'vue-router';
+    import { useRoute } from 'vue-router';
     import api from '../api'
     import { parsesonglist } from '@/utils';
     import Songlist from '@/components/songlist.vue';

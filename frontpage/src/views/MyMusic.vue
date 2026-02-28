@@ -2,29 +2,10 @@
     import {ref,onMounted} from 'vue'
     import { useUserStore } from '@/stores/user';
     import api from '../api'
-    import { useRouter} from 'vue-router';
-    import { parseplaylistList } from '@/utils';
-
-    
-    const router=useRouter()
+    import { parseplaylistList,handlePlaylist,handleLogin} from '@/utils';
+  
     const userstore=useUserStore()
 
-
-    //跳转登录
-    const handlegologin=()=>{
-        router.push("/login")
-    }
-
-
-    //跳转歌单
-    const handleopenplaylist=(id)=>{
-        router.push({
-            name:"musiclist",
-            query:{id}
-        })
-    }
-    
-    
     //获取歌单
     const playlists=ref([])
     const fetchUserPlayLists=async()=>{
@@ -46,7 +27,7 @@
         <div class="inner">
             <div v-if="!userstore.isLoggedIn" class="login-hint">
                 <p class="hint-text">没登录哪来的音乐 ,->
-                    <button class="hint-btn" type="button" @click="handlegologin">去登录</button>
+                    <button class="hint-btn" type="button" @click="handleLogin">去登录</button>
                     <-
                 </p>
             </div>
@@ -54,7 +35,7 @@
                 <h2 class="title">我的音乐</h2>
                 <div v-if="!playlists.length" class="tip">没歌</div>
                 <ul v-else class="playlist-list">
-                    <li class="playlist-item" @click="handleopenplaylist(item.id)" v-for="item in playlists" :key="item.id">
+                    <li class="playlist-item" @click="handlePlaylist(item.id)" v-for="item in playlists" :key="item.id">
                         <div class="cover">
                             <img :src="item.cover" alt="封面">
                         </div>

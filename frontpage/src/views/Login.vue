@@ -3,6 +3,7 @@ import {ref,onMounted,watch,onUnmounted} from 'vue'
 import api from "../api"
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import { handleBack } from '@/utils'
 
 const router=useRouter()
 const userstore=useUserStore()
@@ -14,13 +15,6 @@ const refreshlogin=async()=>{
     } catch (err) {
         console.log(err);
         
-    }
-}
-
-//点击空白返回
-const handleclick=(event)=>{
-    if(event.target===event.currentTarget){
-        router.push("/")
     }
 }
 
@@ -160,7 +154,7 @@ onUnmounted(()=>{
 
 
 <template>
-    <div class="login-overlay" @click="handleclick">
+    <div class="login-overlay" @click="handleBack">
         <div class="login-modal">
             <div class="login-header">
                 <h2>扫码登录</h2>
