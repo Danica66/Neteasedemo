@@ -26,8 +26,8 @@
         try {
             const res=await api.get('/personalized/newsong',{limit:10})
             const newsonglist=res.result||[]
-            newsongs.value = parsesonglist(newsonglist)
             // console.log(newsonglist);
+            newsongs.value = parsesonglist(newsonglist)
             // console.log(newsongs.value);
             
         } catch (error) {

@@ -22,8 +22,11 @@
             loading.value=true
             // 获取歌单详情
             const res=await api.get('/playlist/detail',{id})
+            // console.log(res);
             playlistName.value=res.playlist?.name||'歌单'
             const songlist=res.playlist?.tracks||[]
+            // console.log(songlist.value);
+            
             tracks.value=parsesonglist(songlist)
         } catch (error) {
             console.log("获取歌单详情失败:",error);
