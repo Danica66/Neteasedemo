@@ -21,7 +21,7 @@
 <template>
     <div :class="`${customClass}-style`">
         <h2 class="title">{{title}}</h2>
-        <div v-if="!itemlist.length" class="tip">没歌</div>
+        <div v-if="customClass==='mymusiclist'&&!itemlist.length" class="tip">没歌</div>
         <ul v-else class="item-list">
             <li v-for="item in itemlist" :key="item.id" class="item-item" @click="handle(item.id)">
                 <div class="cover">
