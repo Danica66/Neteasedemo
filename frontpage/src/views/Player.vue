@@ -13,7 +13,6 @@
             const res=await api.get('/song/detail',{ids})
             const detail=(res.songs||[])[0]
             song.value=parsesong(detail,',')
-            // console.log(song.value);
         }catch(error){
             console.error('获取歌曲详情失败',error)
         }
@@ -29,8 +28,6 @@
             const raw=res.lrc?.lyric||''
             lyrics.value=parselyric(raw)
             timestamp.value=parsetimestamp(raw)
-            // console.log(lyrics.value);            
-            // console.log(timestamp.value);
             
         }catch(err){
             console.log("获取歌词失败",err)

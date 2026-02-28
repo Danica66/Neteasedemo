@@ -23,8 +23,6 @@
         try{
             loading.value=true
             const res=await api.get('/artist/songs',{id,limit:1000})
-            // console.log(res);
-            // console.log(artistname.value);
             const playlist=res.songs||[]
             songlist.value=parsesonglist(playlist)
         }catch(err){
