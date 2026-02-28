@@ -12,7 +12,7 @@
     const keyword =computed(()=>(route.query.keyword ||'').toString())
     const fetchSearchResult=async()=>{
         try {
-            loading.value=true
+            loading.value=true 
             const keywords=keyword.value.trim()
             const res=await api.get("/search",{keywords,limit:100})
             const songs=res.result?.songs||[]
@@ -40,7 +40,7 @@
 
 
 <template>
-    <div class="page">
+    <div class="page inner">
         <div class="inner">
             <Songlist :songlist="songlist" :title="'搜索结果(展示100条)'" :tip="`找不到与“${keyword}”相关内容`" :loading="loading">
                 <template #l-title>

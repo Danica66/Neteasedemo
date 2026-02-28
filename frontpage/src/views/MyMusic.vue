@@ -3,7 +3,7 @@
     import { useUserStore } from '@/stores/user';
     import api from '../api'
     import { parseplaylistList,handlePlaylist,handleLogin} from '@/utils';
-  
+    import card from '@/components/card.vue';
     const userstore=useUserStore()
 
     //获取歌单
@@ -31,21 +31,7 @@
                     <-
                 </p>
             </div>
-            <div v-else>
-                <h2 class="title">我的音乐</h2>
-                <div v-if="!playlists.length" class="tip">没歌</div>
-                <ul v-else class="playlist-list">
-                    <li class="playlist-item" @click="handlePlaylist(item.id)" v-for="item in playlists" :key="item.id">
-                        <div class="cover">
-                            <img :src="item.cover" alt="封面">
-                        </div>
-                        <div class="info">
-                            <p class="name">{{ item.name }}</p>
-                            <p class="count">共 {{ item.trackCount }} 首</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+            <card v-else customClass="mymusiclist" :title="'我的音乐'" :itemlist="playlists" :handle="handlePlaylist"/>
         </div>
     </div>
 </template>
@@ -60,40 +46,5 @@
 .hint-btn:hover{
     background-color: #ff0000;
     color:white
-}
-.title{
-    margin-bottom: 16px;
-}
-.tip{
-    font-size: 18px;
-    text-align: center;
-    margin-top: 40px;
-}
-.playlist-list{
-    display: flex;
-    flex-wrap: wrap;
-    gap:20px
-}
-.playlist-item{
-    width: 270px;
-    height: 360px;
-    background: #f7f1f1;
-    align-items: center;
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px black;
-}
-.playlist-item:hover {
-    cursor: pointer;
-    transform: scale(1.05);
-    transition: all 0.3s ease;
-}   
-.cover img{
-    width: 100%;
-    height: 100%;
-    border-radius: 5px 5px 0 0;
-}
-.info{
-    padding: 10px;
-    height: 100px;
 }
 </style>

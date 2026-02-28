@@ -12,7 +12,7 @@ export const parsesong = (song,arjoinstr='/') => {
   return {
     id: song.id,
     name: song.name || '未知歌曲',
-    artist: parseartist(song.artists || song.song?.artists ,arjoinstr),
+    artist: parseartist(song.ar ||song.artists || song.song?.artists ,arjoinstr),
     duration: song.dt || song.duration || 0,
     album: (song.al || song.album)?.name || '未知专辑',
     cover: (song.al || song.album || song )?.picUrl

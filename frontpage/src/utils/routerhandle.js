@@ -13,11 +13,11 @@ export const handlePlaySong=(id)=>{
 export const handleSingerPlaylist=(id,name)=>{
     if(!id) return
     router.push({
-            name:'artistmusic',
-            query:{
-                id:id,
-                name:name
-            },
+        name:'artistmusic',
+        query:{
+            id:id,
+            name:name
+        },
     })
 }
 
@@ -25,8 +25,8 @@ export const handleSingerPlaylist=(id,name)=>{
 export const handlePlaylist=(id)=>{
     if(!id) return
     router.push({
-            name:'musiclist',
-            query:{id}
+        name:'musiclist',
+        query:{id}
     })
 }
 
