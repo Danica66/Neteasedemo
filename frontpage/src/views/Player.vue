@@ -3,8 +3,11 @@
     import { useRoute } from 'vue-router'
     import api from '../api'
     import { formatetime,parsesong,parselyric,parsetimestamp } from '@/utils'
+    import { usePlayer } from '@/stores/player'
+
     const route = useRoute()
-    
+    const player = usePlayer()
+
     // 获取歌曲
     const song=ref({})
     const id = computed(() => route.query.id)
@@ -20,14 +23,12 @@
     
 
     //获取歌词
-    const lyrics=ref([])
-    const timestamp=ref([])
     const fetchlyrics=async(id)=>{
         try{
             const res=await api.get('/lyric',{id})
             const raw=res.lrc?.lyric||''
-            lyrics.value=parselyric(raw)
-            timestamp.value=parsetimestamp(raw)
+            player.lyrics=parselyric(raw)
+            player.timestamp=parsetimestamp(raw)
             
         }catch(err){
             console.log("获取歌词失败",err)
@@ -40,91 +41,23 @@
 
 
     //音乐播放地址
-    const audioref=ref(null)
-    const currenttime=ref(0)
-    const duration=ref(0)
+    const audioref=ref('')
     const audioUrl=ref('')
-    const isPlaying=ref(false)
     const fetchsongurl=async(id)=>{
         try{
             const res=await api.get("/song/url",{id})
             const item=(res.data||[])[0]
             audioUrl.value=item?.url||''
-            currenttime.value=0
-            duration.value=0
-            isPlaying.value=false
         }catch(err){
             console.log("获取歌曲播放地址失败");
             audioUrl.value=""
-            isPlaying.value=false
-            
         }
     }
     
-    
-    
-    //加载歌曲元数据
-    const handleloadedmetadata=()=>{
-        const audio=audioref.value
-        duration.value=audio.duration||0
-        currenttime.value=audio.currentTime||0    
-    }
-
-    //滚动歌词
-    const currentindex=ref(0)
-    const findExactLyricIndex = (currentTime) => {
-        if (!timestamp.value.length) return -1
-        const tolerance = 0.01 // 10毫秒的容差
-        for (let i = 0; i < timestamp.value.length; i++) {
-            // 如果当前时间非常接近某个时间戳（在容差范围内）
-            if (Math.abs(timestamp.value[i] - currentTime) < tolerance) {
-                return i
-            }
-            // 标准逻辑：当前时间介于当前时间戳和下一个时间戳之间
-            if (timestamp.value[i] <= currentTime + tolerance) {
-                if (i === timestamp.value.length - 1 || timestamp.value[i + 1] > currentTime + tolerance) {
-                    return i
-                }
-            }
-        }
-        return 0
-    }
-    
-    //播放交互细节
-    const handletoggleplay=()=>{
-        const audio=audioref.value
-        if(audio.paused){
-            audio.play().then(()=>{
-                isPlaying.value=true
-            }).catch(()=>{})
-        }else{
-            audio.pause()
-            isPlaying.value=false
-        }
-    }
-    const handleaudioended = () =>{
-        isPlaying.value=false
-    }
-    const handletimeupdate = () =>{
-        const audio=audioref.value
-        currenttime.value=audio.currentTime
-        duration.value=audio.duration
-        //找歌词对应的currentindex
-        currentindex.value=findExactLyricIndex(formatetime(currenttime.value*1000,1))
-    }
-    const handleprogressclick=(event)=>{
-        const bar=event.currentTarget
-        const rect=bar.getBoundingClientRect()
-        const ratio=(event.clientX-rect.left)/rect.width
-        const audio=audioref.value
-        const newTime=duration.value*ratio
-        audio.currentTime=newTime
-        currenttime.value=newTime
-    }
 
     // 监听currentindex使歌词滚动中间
-    watch(currentindex, (newIndex) => {
-        if (lyrics.value.length) {
+    watch(player.currentindex, (newIndex) => {
+        if (player.lyrics.value.length) {
             nextTick(() => {
                 const lyricElement = document.getElementById(`lyric-${newIndex}`)
                 if (lyricElement) {
@@ -132,6 +65,17 @@
                         behavior: 'smooth',
                         block: 'center'  // 这将使元素滚动到容器中间
                     })
+                }
+            })
+        }
+    })
+    
+    //监听url变化传回player
+    watch(audioUrl, (newUrl) => {
+        if (newUrl) {
+            nextTick(() => {
+                if (audioref.value) {
+                    player.getAudio(audioref.value)
                 }
             })
         }
@@ -165,8 +109,8 @@
                     <div class="lyrics-card">
                         <h3 class="lyrics-title">歌词</h3>
                         <div class="lyrics-content">
-                            <template v-if="lyrics.length">
-                                <p v-for="(line,index) in lyrics" :key="index" :class="{'lyrics-line--highlight' :index===currentindex}" :id="`lyric-${index}`" class="lyrics-line">{{ line }}</p>
+                            <template v-if="player.lyrics.length">
+                                <p v-for="(line,index) in player.lyrics" :key="index" :class="{'lyrics-line--highlight' :index===player.currentindex}" :id="`lyric-${index}`" class="lyrics-line">{{ line }}</p>
                             </template>
                             <p v-else class="lyrics-line">暂无歌词</p>
                         </div>
@@ -175,16 +119,16 @@
             </div>
             <div class="player-controls">
                 <div class="controls-main">
-                    <button class="btn-circle btn-large" @click="handletoggleplay">{{ isPlaying?"⏸":"▶" }}</button>
+                    <button class="btn-circle btn-large" @click="player.Toggleplay">{{ player.isPlaying?"⏸":"▶" }}</button>
                 </div>
                 <div class="progress-wrap">
-                    <span class="time-label">{{ formatetime(currenttime*1000) }}</span>
-                    <div class="progress-bar" @click="handleprogressclick">
-                        <div class="progress-inner" :style="{width:duration ? `${(currenttime/duration)*100}%` : '0%' }"></div>
+                    <span class="time-label">{{ formatetime(player.currenttime*1000) }}</span>
+                    <div class="progress-bar" @click="player.Progressclick">
+                        <div class="progress-inner" :style="{width:player.duration ? `${(player.currenttime/player.duration)*100}%` : '0%' }"></div>
                     </div>
-                    <span class="time-label">{{ formatetime(duration*1000) }}</span>
+                    <span class="time-label">{{ formatetime(player.duration*1000) }}</span>
                 </div>
-            <audio :src="audioUrl" ref="audioref" v-if="audioUrl" class="audio-hidden" @loadedmetadata="handleloadedmetadata" @timeupdate="handletimeupdate" @ended="handleaudioended"></audio>
+            <audio :src="audioUrl" ref="audioref" v-if="audioUrl" class="audio-hidden" @loadedmetadata="player.LoadedMetaData" @timeupdate="player.Timeupdate" @ended="player.Endedplay"></audio>
             </div>
         </div>
     </div>
