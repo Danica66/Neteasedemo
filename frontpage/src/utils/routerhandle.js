@@ -1,32 +1,33 @@
 import router from '@/router'  
+import {usePlayer} from '@/stores/player'
+
 
 //跳转放歌
-export const handlePlaySong=(id)=>{
-    if(!id) return
+export const handlePlaySong=(item,index=0)=>{
+    const player=usePlayer()
+    player.setCurrentSongid(item.id)
+    player.setCurrentListIndex(index)
     router.push({
-        name:'player',
-        query:{id}
+        name:'player'
     })
 }
 
 //跳转歌手歌单列表
-export const handleSingerPlaylist=(id,name)=>{
-    if(!id) return
+export const handleSingerPlaylist=(item,name)=>{
     router.push({
         name:'artistmusic',
         query:{
-            id:id,
+            id:item.id,
             name:name
         },
     })
 }
 
 //跳转歌单列表
-export const handlePlaylist=(id)=>{
-    if(!id) return
+export const handlePlaylist=(item)=>{
     router.push({
         name:'musiclist',
-        query:{id}
+        query:{id:item.id}
     })
 }
 

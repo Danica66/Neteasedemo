@@ -23,7 +23,7 @@
         <h2 class="title">{{title}}</h2>
         <div v-if="customClass==='mymusiclist'&&!itemlist.length" class="tip">没歌</div>
         <ul v-else class="item-list">
-            <li v-for="item in itemlist" :key="item.id" class="item-item" @click="handle(item.id)">
+            <li v-for="item in itemlist" :key="item.id" class="item-item" @click="handle(item)">
                 <div class="cover">
                     <img :src="item.cover" :alt="item.title||item.name" class="cover-image" />
                 </div>

@@ -40,9 +40,9 @@
 
 
 <template>
-    <div class="page inner">
+    <div class="page">
         <div class="inner">
-            <Songlist :songlist="songlist" :title="'搜索结果(展示100条)'" :tip="`找不到与“${keyword}”相关内容`" :loading="loading">
+            <Songlist :songlist="songlist" :title="'搜索结果(展示100条)'" :tip="`找不到与“${keyword}”相关内容`" :loading="loading" :islist="false" :isindex="false">
                 <template #l-title>
                     <p class="keyword" >关键字:{{ keyword }}</p>
                 </template>

@@ -41,7 +41,7 @@
 <template>
     <div class="page">
         <div class="inner">
-            <Songlist :title="`${artistname}${songlist.length}首歌(最多200首)`" :songlist="songlist" :loading="loading" :isindex="true"/>
+            <Songlist :title="`${artistname}${songlist.length}首歌(最多200首)`" :songlist="songlist" :loading="loading"/>
         </div>
     </div>
 </template>

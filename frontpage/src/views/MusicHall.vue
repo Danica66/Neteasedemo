@@ -85,7 +85,7 @@
                 <div class="singer-carousel-track">
                     <div v-for="(slide,index) in singerSlides" :key="index" class="singer-slide" v-show="index==currentSingerSlide">
                         <ul class="singer-list">
-                            <li v-for="singer in slide" :key="singer.id" class="singer-item" @click="handleSingerPlaylist(singer.id,singer.name)">
+                            <li v-for="singer in slide" :key="singer.id" class="singer-item" @click="handleSingerPlaylist(singer,singer.name)">
                                 <div class="singer-avatar">
                                     <img :src="singer.avatar" :alt="singer.name">
                                 </div>
@@ -141,7 +141,6 @@
 }
 .singer-name {
     font-size: 14px;
-    color: #333;
 }
 .singer-carousel-controls {
     position: absolute;

@@ -44,7 +44,7 @@
 <template>
     <div class="page">
         <div class="inner">
-            <Songlist :title="`${playlistName}`" :songlist="songlist" :loading="loading" :isindex="true"/>
+            <Songlist :title="`${playlistName}`" :songlist="songlist" :loading="loading" />
         </div>
     </div>
 </template>

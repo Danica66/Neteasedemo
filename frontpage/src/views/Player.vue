@@ -1,16 +1,13 @@
 <script setup>
-    import{ref,onMounted,computed,watch,nextTick} from 'vue'
-    import { useRoute } from 'vue-router'
+    import{ref,onMounted,watch,nextTick, onUnmounted} from 'vue'
     import api from '../api'
-    import { formatetime,parsesong,parselyric,parsetimestamp } from '@/utils'
+    import { formatetime,parsesong,parselyric,parsetimestamp} from '@/utils'
     import { usePlayer } from '@/stores/player'
 
-    const route = useRoute()
     const player = usePlayer()
 
     // 获取歌曲
     const song=ref({})
-    const id = computed(() => route.query.id)
     const fetchSongDetail=async(ids)=>{
         try{
             const res=await api.get('/song/detail',{ids})
@@ -36,12 +33,19 @@
         }
     }
 
+    //监听currentsongid变化重新读取歌曲信息
+    watch(
+        ()=>player.currentsongid,
+        ()=>{
+            fetchSongDetail(player.getCurrentSongid().value)
+            fetchlyrics(player.getCurrentSongid().value)
+            fetchsongurl(player.getCurrentSongid().value)
+            player.init()
+        }
+    )
 
 
-
-
-    //音乐播放地址
-    const audioref=ref('')
+    //获取音乐播放地址
     const audioUrl=ref('')
     const fetchsongurl=async(id)=>{
         try{
@@ -54,10 +58,12 @@
         }
     }
     
-
-    // 监听currentindex使歌词滚动中间
-    watch(player.currentindex, (newIndex) => {
-        if (player.lyrics.value.length) {
+    
+    // 监听currentlyricindex使歌词滚动中间
+    watch(
+        () => player.currentlyricindex, 
+        (newIndex) => {
+        if (player.lyrics.length) {
             nextTick(() => {
                 const lyricElement = document.getElementById(`lyric-${newIndex}`)
                 if (lyricElement) {
@@ -70,7 +76,8 @@
         }
     })
     
-    //监听url变化传回player
+    //监听url变化获取对象传回player
+    const audioref=ref('')
     watch(audioUrl, (newUrl) => {
         if (newUrl) {
             nextTick(() => {
@@ -82,9 +89,14 @@
     })
 
     onMounted(() => {
-        fetchSongDetail(id.value)
-        fetchlyrics(id.value)
-        fetchsongurl(id.value)
+        fetchSongDetail(player.getCurrentSongid().value)
+        fetchlyrics(player.getCurrentSongid().value)
+        fetchsongurl(player.getCurrentSongid().value)
+        player.init()
+        player.initPlaymode()
+    })
+    onUnmounted(()=>{
+        player.deleteCurrentSongid()
     })
 </script>
 
@@ -103,6 +115,7 @@
                         <p class="song-artist">{{ song.artist }}</p>
                         <p class="song-album">{{ song.album }}</p>
                         <p>───无vip,播放vip歌曲只有30秒───</p>
+                        <p>当前播放状态: {{ player.Playmode===1?'单曲循环':player.Playmode===2?'随机播放':'循环播放'  }}</p>
                     </div>
                 </div>
                 <div class="player-right">
@@ -110,7 +123,7 @@
                         <h3 class="lyrics-title">歌词</h3>
                         <div class="lyrics-content">
                             <template v-if="player.lyrics.length">
-                                <p v-for="(line,index) in player.lyrics" :key="index" :class="{'lyrics-line--highlight' :index===player.currentindex}" :id="`lyric-${index}`" class="lyrics-line">{{ line }}</p>
+                                <p v-for="(line,index) in player.lyrics" :key="index" :class="{'lyrics-line--highlight' :index===player.currentlyricindex}" :id="`lyric-${index}`" class="lyrics-line">{{ line }}</p>
                             </template>
                             <p v-else class="lyrics-line">暂无歌词</p>
                         </div>
@@ -119,7 +132,11 @@
             </div>
             <div class="player-controls">
                 <div class="controls-main">
-                    <button class="btn-circle btn-large" @click="player.Toggleplay">{{ player.isPlaying?"⏸":"▶" }}</button>
+                    <button class="btn-circle btn-small" @click="player.changePlaymode">{{ player.Playmode===1?'🔂':player.Playmode===2?'🔀':'🔁' }}</button>
+                    <button class="btn-circle btn-small" @click="player.upPlaylist">&#9198;</button>
+                    <button class="btn-circle btn-large" @click="player.Toggleplay">{{ player.isPlaying?"&#9208;":"&#9205;" }}</button>
+                    <button class="btn-circle btn-small" @click="player.downPlaylist">&#9197;</button>
+                    <button class="btn-circle btn-small" @click="player.addPlaylist(song)">➕</button>
                 </div>
                 <div class="progress-wrap">
                     <span class="time-label">{{ formatetime(player.currenttime*1000) }}</span>
@@ -128,7 +145,7 @@
                     </div>
                     <span class="time-label">{{ formatetime(player.duration*1000) }}</span>
                 </div>
-            <audio :src="audioUrl" ref="audioref" v-if="audioUrl" class="audio-hidden" @loadedmetadata="player.LoadedMetaData" @timeupdate="player.Timeupdate" @ended="player.Endedplay"></audio>
+                <audio :src="audioUrl" ref="audioref" v-if="audioUrl" class="audio-hidden" @loadedmetadata="player.LoadedMetaData" @timeupdate="player.Timeupdate" @ended="player.Endedplay"></audio>
             </div>
         </div>
     </div>
@@ -255,6 +272,7 @@
 }
 .controls-main{
     display:flex;
+    justify-content: center;
     align-items:center;
     gap:24px;
 }
@@ -262,8 +280,8 @@
     border-radius: 50%;
     border:none;
     cursor: pointer;
-    background: #fff;
-    color: #000;
+    background: rgb(54, 41, 41);
+    color: #cbc4c4;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -314,7 +332,6 @@
         flex-direction: column;
     }
     .player-main{
-
         flex-direction: column;
         align-items: center;
     }
