@@ -1,12 +1,12 @@
 <script setup>
-    import api from '../api'
     import {ref,onMounted,computed} from 'vue'
     import { useRoute } from 'vue-router' 
-    import { parsesonglist } from '@/utils'
     import Songlist from '@/components/songlist.vue'
+    import { fetchartistsong } from '@/api/fetch'
 
     const songlist=ref([])
     const route=useRoute()    
+    const loading=ref(false)
     const id=computed(()=>{
         return route.query.id
     })
@@ -14,27 +14,20 @@
         return route.query.name
     })
 
-    //加载状态
-    const loading=ref(false)
-    
-
-    //拿歌
-    const fetchartistsong=async(id)=>{
+    //加载数据
+    const loadData=async()=>{
         try{
             loading.value=true
-            const res=await api.get('/artist/songs',{id,limit:1000})
-            const playlist=res.songs||[]
-            songlist.value=parsesonglist(playlist)
+            songlist.value=await fetchartistsong(id.value)
         }catch(err){
-            console.log("获取歌手歌曲失败",err);
+            console.log("加载数据失败",err);
         }finally{
             loading.value=false
         }
-        
     }
 
     onMounted(()=>{
-        fetchartistsong(id.value)
+        loadData()
     })
 
 </script>

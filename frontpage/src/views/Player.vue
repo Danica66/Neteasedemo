@@ -1,64 +1,46 @@
 <script setup>
-    import{ref,onMounted,watch,nextTick, onUnmounted} from 'vue'
-    import api from '../api'
-    import { formatetime,parsesong,parselyric,parsetimestamp} from '@/utils'
+    import{ref,watch,nextTick,onUnmounted, onMounted, computed} from 'vue'
+    import { formatetime} from '@/utils'
     import { usePlayer } from '@/stores/player'
-
-    const player = usePlayer()
-
-    // 获取歌曲
-    const song=ref({})
-    const fetchSongDetail=async(ids)=>{
-        try{
-            const res=await api.get('/song/detail',{ids})
-            const detail=(res.songs||[])[0]
-            song.value=parsesong(detail,',')
-        }catch(error){
-            console.error('获取歌曲详情失败',error)
-        }
-    }
+    import { fetchSongDetail,fetchLyrics,fetchSongUrl } from '@/api/fetch'
     
-
-    //获取歌词
-    const fetchlyrics=async(id)=>{
-        try{
-            const res=await api.get('/lyric',{id})
-            const raw=res.lrc?.lyric||''
-            player.lyrics=parselyric(raw)
-            player.timestamp=parsetimestamp(raw)
-            
-        }catch(err){
-            console.log("获取歌词失败",err)
-            lyrics.value=[]
-        }
+    const player = usePlayer()
+    const song=ref({})
+    const audioUrl=ref('')
+    const audioref=ref('')
+    const songId=computed(()=>{
+        return player.getCurrentSongid()
+    })
+    //加载数据
+    const loadData=async()=>{
+        try {       
+                // 并行请求
+                const [songData, lyricsData, urlData] = await Promise.all([
+                    fetchSongDetail(songId.value),
+                    fetchLyrics(songId.value),
+                    fetchSongUrl(songId.value)
+                ])
+                // 更新数据
+                song.value = songData
+                player.lyrics = lyricsData.lyrics
+                player.lyricstimestamp = lyricsData.timestamp
+                audioUrl.value = urlData
+                
+                // 初始化播放器
+                player.init()
+                
+            } catch (error) {
+                console.error('加载歌曲失败', error)
+            }
     }
-
     //监听currentsongid变化重新读取歌曲信息
     watch(
-        ()=>player.currentsongid,
+        ()=>songId.value,
         ()=>{
-            fetchSongDetail(player.getCurrentSongid().value)
-            fetchlyrics(player.getCurrentSongid().value)
-            fetchsongurl(player.getCurrentSongid().value)
-            player.init()
+            loadData()
         }
     )
 
-
-    //获取音乐播放地址
-    const audioUrl=ref('')
-    const fetchsongurl=async(id)=>{
-        try{
-            const res=await api.get("/song/url",{id})
-            const item=(res.data||[])[0]
-            audioUrl.value=item?.url||''
-        }catch(err){
-            console.log("获取歌曲播放地址失败");
-            audioUrl.value=""
-        }
-    }
-    
-    
     // 监听currentlyricindex使歌词滚动中间
     watch(
         () => player.currentlyricindex, 
@@ -77,7 +59,6 @@
     })
     
     //监听url变化获取对象传回player
-    const audioref=ref('')
     watch(audioUrl, (newUrl) => {
         if (newUrl) {
             nextTick(() => {
@@ -87,13 +68,8 @@
             })
         }
     })
-
-    onMounted(() => {
-        fetchSongDetail(player.getCurrentSongid().value)
-        fetchlyrics(player.getCurrentSongid().value)
-        fetchsongurl(player.getCurrentSongid().value)
-        player.init()
-        player.initPlaymode()
+    onMounted(()=>{
+        loadData()  
     })
     onUnmounted(()=>{
         player.deleteCurrentSongid()

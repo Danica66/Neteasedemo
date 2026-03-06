@@ -1,43 +1,33 @@
 <script setup>
     import {useRoute} from 'vue-router'
     import { ref,computed, onMounted } from 'vue'
-    import { parsesonglist  } from '@/utils'
-    import api from '../api'
     import Songlist from '@/components/songlist.vue'
+    import { fetchPlaylistDetail } from '@/api/fetch'
     
     const route=useRoute()
-
-    //加载状态
-    const loading=ref(false)
-    
-        
-    // 歌单详情数据
+    const loading=ref(false)    
     const playlistName=ref('')
     const songlist=ref([])
     const playlistId=computed(()=>{
         return route.query.id
     })
 
-    const fetchPlaylistDetail=async(id)=>{
+    //加载数据
+    const loadData=async()=>{
         try {
-            // 开始加载
             loading.value=true
-            // 获取歌单详情
-            const res=await api.get('/playlist/detail',{id})
-            playlistName.value=res.playlist?.name||'歌单'
-            const playlist=res.playlist?.tracks||[]
-            songlist.value=parsesonglist(playlist)
-             
+            const data=await fetchPlaylistDetail(playlistId.value)
+            playlistName.value=data.title.value
+            songlist.value=data.list.value
         } catch (error) {
-            console.log("获取歌单详情失败:",error);
+            console.log("加载状态失败",error);
         }finally{
-            // 无论成功失败都结束加载状态
             loading.value=false
         }
     }
 
     onMounted(()=>{
-        fetchPlaylistDetail(playlistId.value)
+        loadData()
     })
 </script>
         

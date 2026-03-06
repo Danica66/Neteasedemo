@@ -1,25 +1,22 @@
 <script setup>
     import {ref,onMounted} from 'vue'
     import { useUserStore } from '@/stores/user';
-    import api from '../api'
-    import { parseplaylistList,handlePlaylist,handleLogin} from '@/utils';
+    import { handlePlaylist,handleLogin} from '@/utils';
+    import { fetchUserPlayLists } from '@/api/fetch';
     import card from '@/components/card.vue';
     const userstore=useUserStore()
 
-    //获取歌单
+    //加载数据
     const playlists=ref([])
-    const fetchUserPlayLists=async()=>{
-        try{
-            const uid=userstore.user?.id
-            const res=await api.get("/user/playlist",{uid})
-            const playlist=res.playlist||[]
-            playlists.value=parseplaylistList(playlist)
-        }catch(err){
-            console.log("获取歌单失败",err);
+    const loadData=async()=>{
+        try {
+            playlists.value=await fetchUserPlayLists(userstore.user?.id)
+        } catch (error) {
+            console.log("加载数据失败",error);
         }
     }
     onMounted(()=>{
-        fetchUserPlayLists()
+        loadData()
     })
 </script>
 <template>

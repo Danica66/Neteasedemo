@@ -7,12 +7,16 @@ export const PlayMode = {
     LOOP: 3         // 列表循环
 }
 export const usePlayer=defineStore('player',()=>{
+    const PLAYMODE_KEY='playmode'
+    const SONGID_KEY='currentsongid'
+    const PLAYLIST_KEY="playlist"
+    
     const currenttime=ref(0)
     const duration=ref(0)
     const isPlaying=ref(false)
     const currentlyricindex=ref(0)
     const lyrics=ref([])
-    const timestamp=ref([])
+    const lyricstimestamp=ref([])
     const audio=ref(null)
     const playlist=ref([])
     const currentsongid=ref(0)
@@ -30,14 +34,9 @@ export const usePlayer=defineStore('player',()=>{
         }
     }
     //改变播放模式
-    const PLAYMODE_KEY='playmode'
     const changePlaymode=()=>{
         Playmode.value=(Playmode.value+1)%3+1
         localStorage.setItem(PLAYMODE_KEY,JSON.stringify(Playmode.value))
-    }
-    //初始化播放模式
-    const initPlaymode=()=>{
-        Playmode.value=JSON.parse(localStorage.getItem(PLAYMODE_KEY))
     }
     //上一曲
     const upPlaylist=()=>{
@@ -76,7 +75,6 @@ export const usePlayer=defineStore('player',()=>{
         currentlistindex.value=playlist.value==[]?0:index
     }
     //设置当前id
-    const SONGID_KEY='currentsongid'
     const setCurrentSongid=(id)=>{
         currentsongid.value=id
         localStorage.setItem(SONGID_KEY,id)
@@ -85,7 +83,7 @@ export const usePlayer=defineStore('player',()=>{
     //获取id
     const getCurrentSongid=()=>{
         currentsongid.value=localStorage.getItem(SONGID_KEY)
-        return currentsongid
+        return currentsongid.value
     }
     //删除id
     const deleteCurrentSongid=()=>{
@@ -102,7 +100,6 @@ export const usePlayer=defineStore('player',()=>{
     }
     
     //设置list放在localStorage
-    const PLAYLIST_KEY="playlist"
     const setPlaylist=(list)=>{
         playlist.value=list
         localStorage.setItem(PLAYLIST_KEY,JSON.stringify(list))
@@ -147,8 +144,6 @@ export const usePlayer=defineStore('player',()=>{
             audio.value.pause()
             isPlaying.value=false
         }
-        console.log(isPlaying.value);
-        
     }
     //结尾下一曲
     const Endedplay = () =>{
@@ -164,16 +159,16 @@ export const usePlayer=defineStore('player',()=>{
     }
     //计算歌词位置
     const findExactLyricIndex = (currentTime) => {
-        if (!timestamp.value.length) return -1
-        const tolerance = 0.0001 // 0.1毫秒的容差
-        for (let i = 0; i < timestamp.value.length; i++) {
+        if (!lyricstimestamp.value.length) return -1
+        const tolerance = 0.5 // 0.1毫秒的容差
+        for (let i = 0; i < lyricstimestamp.value.length; i++) {
             // 如果当前时间非常接近某个时间戳（在容差范围内）
-            if (Math.abs(timestamp.value[i] - currentTime) < tolerance) {
+            if (Math.abs(lyricstimestamp.value[i] - currentTime) < tolerance) {
                 return i
             }
             // 标准逻辑：当前时间介于当前时间戳和下一个时间戳之间
-            if (timestamp.value[i] <= currentTime + tolerance) {
-                if (i === timestamp.value.length - 1 || timestamp.value[i + 1] > currentTime + tolerance) {
+            if (lyricstimestamp.value[i] <= currentTime + tolerance) {
+                if (i === lyricstimestamp.value.length - 1 || lyricstimestamp.value[i + 1] > currentTime + tolerance) {
                     return i
                 }
             }
@@ -193,6 +188,7 @@ export const usePlayer=defineStore('player',()=>{
     //初始化防止小bug
     const init=()=>{
         isPlaying.value=false;
+        Playmode.value=JSON.parse(localStorage.getItem(PLAYMODE_KEY))
     }
 
 
@@ -205,8 +201,7 @@ export const usePlayer=defineStore('player',()=>{
         duration,
         currentlyricindex,
         lyrics,
-        timestamp,
-        currentsongid,
+        lyricstimestamp,
         currentlistindex,
         init,
         LoadedMetaData,
@@ -226,7 +221,6 @@ export const usePlayer=defineStore('player',()=>{
         upPlaylist,
         downPlaylist,
         changePlaymode,
-        initPlaymode,
         addPlaylist,
     }
 })

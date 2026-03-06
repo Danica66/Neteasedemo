@@ -1,47 +1,29 @@
 <script setup>
-    import api from '../api'
     import { ref, onMounted , computed } from 'vue'
-    import { parseplaylistList, parsesingerlist, parsesonglist,handlePlaySong,handleSingerPlaylist,handlePlaylist } from '@/utils'
+    import { handlePlaySong,handleSingerPlaylist,handlePlaylist } from '@/utils'
+    import { fetchSingerRank,fetchPlayLists,fetchNewSongs } from '@/api/fetch'
     import card from '@/components/card.vue'
-    // 歌单列表
     const playList = ref([])
-    const fetchPlayList = async () => {
-        try {
-            const res=await api.get('/personalized',{limit:10})
-            const playlists=res.result||[]
-            playList.value = parseplaylistList(playlists)
-        } catch (error) {
-            console.log("获取推荐歌单失败:",error);
-            
-        }
-    }
-
-
-    //推荐新音乐
     const newsongs = ref([])
-    const fetchNewsongs = async () => {
-        try {
-            const res=await api.get('/personalized/newsong',{limit:10})
-            const newsonglist=res.result||[]
-            newsongs.value = parsesonglist(newsonglist)
-        } catch (error) {
-            console.log("获取推荐新音乐失败:",error);
-        }
-    }
- 
-
-    //歌手榜单
     const singerRank=ref([])
-    const fetchSingerRank = async () => {
+
+    //加载数据
+    const loadData = async () => {
         try {
-            const res=await api.get('/top/artists',{limit:100})
-            const singerlist=res.artists||[]
-            singerRank.value = parsesingerlist(singerlist)
+            // 可以并行请求提升速度
+            const [playlists, songs, artists] = await Promise.all([
+                fetchPlayLists(),
+                fetchNewSongs(),
+                fetchSingerRank()
+            ])
+            playList.value = playlists
+            newsongs.value = songs
+            singerRank.value = artists
         } catch (error) {
-            console.log("获取歌手榜单失败:",error);
+            console.error('加载音乐大厅数据失败', error)
         }
     }
-
+    
     //处理轮播图左右按钮
     const currentSingerSlide=ref(0)
     const SINGER_PAGE_SIZE=5
@@ -65,9 +47,7 @@
 
     // 页面加载时获取数据
     onMounted(()=>{
-        fetchPlayList()
-        fetchNewsongs()
-        fetchSingerRank()
+        loadData()
     })
 
 </script>
