@@ -15,21 +15,30 @@ export const usePlayer=defineStore('player',()=>{
     const duration=ref(0)
     const isPlaying=ref(false)
     const currentlyricindex=ref(0)
-    const lyrics=ref([])
-    const lyricstimestamp=ref([])
+    const currentsong=ref({})
+    const currentaudioUrl=ref('')
+    const currentlyrics=ref([])
+    const currentlyricstimestamp=ref([])
     const audio=ref(null)
     const playlist=ref([])
     const currentsongid=ref(0)
     const currentlistindex=ref(0)
     const Playmode=ref(PlayMode.LOOP)
 
-
+    //播放前获取歌曲信息
+    const Play=(item,index=0)=>{
+        setCurrentSongid(item.id)
+        setCurrentListIndex(index)
+    }
     //把歌曲加入播放列表
     const addPlaylist=(song)=>{
+        if (playlist.value===null) {
+            playlist.value=[]
+        }  
+        if (Object.keys(song).length === 0) {
+            return
+        }
         if(!playlist.value.some(s => s.id === song.id)){
-            if (playlist.value===null) {
-                playlist.value=[]
-            }   
             playlist.value.push(song)
         }
     }
@@ -136,6 +145,9 @@ export const usePlayer=defineStore('player',()=>{
 
     //点击播放暂停图标切换
     const Toggleplay=()=>{
+        if (currentsongid.value==0) {
+            return
+        }
         if(audio.value.paused){
             audio.value.play().then(()=>{
                 isPlaying.value=true
@@ -159,16 +171,16 @@ export const usePlayer=defineStore('player',()=>{
     }
     //计算歌词位置
     const findExactLyricIndex = (currentTime) => {
-        if (!lyricstimestamp.value.length) return -1
+        if (!currentlyricstimestamp.value.length) return -1
         const tolerance = 0.5 // 0.1毫秒的容差
-        for (let i = 0; i < lyricstimestamp.value.length; i++) {
+        for (let i = 0; i < currentlyricstimestamp.value.length; i++) {
             // 如果当前时间非常接近某个时间戳（在容差范围内）
-            if (Math.abs(lyricstimestamp.value[i] - currentTime) < tolerance) {
+            if (Math.abs(currentlyricstimestamp.value[i] - currentTime) < tolerance) {
                 return i
             }
             // 标准逻辑：当前时间介于当前时间戳和下一个时间戳之间
-            if (lyricstimestamp.value[i] <= currentTime + tolerance) {
-                if (i === lyricstimestamp.value.length - 1 || lyricstimestamp.value[i + 1] > currentTime + tolerance) {
+            if (currentlyricstimestamp.value[i] <= currentTime + tolerance) {
+                if (i === currentlyricstimestamp.value.length - 1 || currentlyricstimestamp.value[i + 1] > currentTime + tolerance) {
                     return i
                 }
             }
@@ -200,9 +212,11 @@ export const usePlayer=defineStore('player',()=>{
         currenttime,
         duration,
         currentlyricindex,
-        lyrics,
-        lyricstimestamp,
+        currentlyricstimestamp, 
+        currentlyrics,
         currentlistindex,
+        currentsong,
+        currentaudioUrl,
         init,
         LoadedMetaData,
         Toggleplay,
@@ -222,5 +236,6 @@ export const usePlayer=defineStore('player',()=>{
         downPlaylist,
         changePlaymode,
         addPlaylist,
+        Play,
     }
 })

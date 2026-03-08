@@ -1,7 +1,6 @@
 <script setup>
     import { formatetime,handlePlaySong } from '@/utils';
     import { usePlayer } from '@/stores/player';
-    import { computed } from 'vue';
     //接收数据
     const props=defineProps({
         customClass:{
@@ -37,7 +36,7 @@
     const player=usePlayer()
     const handlesetPlaylist=(id,list)=>{
         player.setPlaylist(list)
-        handlePlaySong(id)
+        player.Play(id)
     }
 </script>
 
@@ -50,7 +49,7 @@
         <ul v-else class="song-list">
             <button v-show="islist" class="listbtn" @click="handlesetPlaylist(songlist[0],songlist)">▶ 播放全部(所有歌曲加入列表)</button>
             <slot name="deleteallplaylist" :deleteall="songlist"></slot>
-            <li @click="handlePlaySong(song,index)" v-for="(song,index) in songlist" :key="song.id" class="song-item">
+            <li @click="player.Play(song,index)" v-for="(song,index) in songlist" :key="song.id" class="song-item">
                 <span v-show="isindex" class="song-index">{{index+1}}</span>
                 <div class="song-main">
                     <span class="song-name">{{ song.name }}</span>

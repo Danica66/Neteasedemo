@@ -1,12 +1,13 @@
 <script setup>
     import { ref, onMounted , computed } from 'vue'
-    import { handlePlaySong,handleSingerPlaylist,handlePlaylist } from '@/utils'
+    import { handleSingerPlaylist,handlePlaylist } from '@/utils'
     import { fetchSingerRank,fetchPlayLists,fetchNewSongs } from '@/api/fetch'
+    import { usePlayer } from '@/stores/player'
     import card from '@/components/card.vue'
     const playList = ref([])
     const newsongs = ref([])
     const singerRank=ref([])
-
+    const player=usePlayer()
     //加载数据
     const loadData = async () => {
         try {
@@ -58,7 +59,7 @@
             <!-- 推荐歌单 -->
             <card customClass="playlist" :title="'推荐歌单'" :itemlist="playList" :handle="handlePlaylist"/>
             <!-- 推荐新音乐 -->
-            <card customClass="newsonglist" :title="'推荐新音乐'" :itemlist="newsongs" :handle="handlePlaySong"/>
+            <card customClass="newsonglist" :title="'推荐新音乐'" :itemlist="newsongs" :handle="player.Play"/>
             <!-- 歌手榜单 -->
             <h2 class="section-title--singer">歌手榜单</h2>
             <div class="singer-carousel" v-if="singerSlides.length">

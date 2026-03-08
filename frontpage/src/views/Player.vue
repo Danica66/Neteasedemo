@@ -1,12 +1,16 @@
 <script setup>
-    import{ref,watch,nextTick,onUnmounted, onMounted, computed} from 'vue'
-    import { formatetime} from '@/utils'
+    import{ref,watch,nextTick, onMounted, computed} from 'vue'
     import { usePlayer } from '@/stores/player'
-    import { fetchSongDetail,fetchLyrics,fetchSongUrl } from '@/api/fetch'
-    
+    import { fetchLyrics} from '@/api/fetch'
+    import playercontrolUI from '@/components/playercontrolUI.vue'
+
     const player = usePlayer()
-    const song=ref({})
-    const audioUrl=ref('')
+    const song=computed(()=>{
+        return player.currentsong
+    })
+    const audioUrl=computed(()=>{
+        return player.currentaudioUrl
+    })
     const audioref=ref('')
     const songId=computed(()=>{
         return player.getCurrentSongid()
@@ -14,21 +18,10 @@
     //加载数据
     const loadData=async()=>{
         try {       
-                // 并行请求
-                const [songData, lyricsData, urlData] = await Promise.all([
-                    fetchSongDetail(songId.value),
-                    fetchLyrics(songId.value),
-                    fetchSongUrl(songId.value)
-                ])
+                const lyricsData= await fetchLyrics(songId.value)
                 // 更新数据
-                song.value = songData
-                player.lyrics = lyricsData.lyrics
-                player.lyricstimestamp = lyricsData.timestamp
-                audioUrl.value = urlData
-                
-                // 初始化播放器
-                player.init()
-                
+                player.currentlyrics = lyricsData.lyrics
+                player.currentlyricstimestamp = lyricsData.timestamp
             } catch (error) {
                 console.error('加载歌曲失败', error)
             }
@@ -45,7 +38,7 @@
     watch(
         () => player.currentlyricindex, 
         (newIndex) => {
-        if (player.lyrics.length) {
+        if (player.currentlyrics.length) {
             nextTick(() => {
                 const lyricElement = document.getElementById(`lyric-${newIndex}`)
                 if (lyricElement) {
@@ -71,9 +64,6 @@
     onMounted(()=>{
         loadData()  
     })
-    onUnmounted(()=>{
-        player.deleteCurrentSongid()
-    })
 </script>
 
 <template>
@@ -98,31 +88,15 @@
                     <div class="lyrics-card">
                         <h3 class="lyrics-title">歌词</h3>
                         <div class="lyrics-content">
-                            <template v-if="player.lyrics.length">
-                                <p v-for="(line,index) in player.lyrics" :key="index" :class="{'lyrics-line--highlight' :index===player.currentlyricindex}" :id="`lyric-${index}`" class="lyrics-line">{{ line }}</p>
+                            <template v-if="player.currentlyrics.length">
+                                <p v-for="(line,index) in player.currentlyrics" :key="index" :class="{'lyrics-line--highlight' :index===player.currentlyricindex}" :id="`lyric-${index}`" class="lyrics-line">{{ line }}</p>
                             </template>
                             <p v-else class="lyrics-line">暂无歌词</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="player-controls">
-                <div class="controls-main">
-                    <button class="btn-circle btn-small" @click="player.changePlaymode">{{ player.Playmode===1?'🔂':player.Playmode===2?'🔀':'🔁' }}</button>
-                    <button class="btn-circle btn-small" @click="player.upPlaylist">&#9198;</button>
-                    <button class="btn-circle btn-large" @click="player.Toggleplay">{{ player.isPlaying?"&#9208;":"&#9205;" }}</button>
-                    <button class="btn-circle btn-small" @click="player.downPlaylist">&#9197;</button>
-                    <button class="btn-circle btn-small" @click="player.addPlaylist(song)">➕</button>
-                </div>
-                <div class="progress-wrap">
-                    <span class="time-label">{{ formatetime(player.currenttime*1000) }}</span>
-                    <div class="progress-bar" @click="player.Progressclick">
-                        <div class="progress-inner" :style="{width:player.duration ? `${(player.currenttime/player.duration)*100}%` : '0%' }"></div>
-                    </div>
-                    <span class="time-label">{{ formatetime(player.duration*1000) }}</span>
-                </div>
-                <audio :src="audioUrl" ref="audioref" v-if="audioUrl" class="audio-hidden" @loadedmetadata="player.LoadedMetaData" @timeupdate="player.Timeupdate" @ended="player.Endedplay"></audio>
-            </div>
+            <playercontrolUI />
         </div>
     </div>
 </template>
@@ -238,6 +212,8 @@
     scrollbar-width: none;
     scrollbar-color: transparent transparent;
 }
+
+
 .player-controls{
     width: 100%;
     padding: 16px 24px 0;

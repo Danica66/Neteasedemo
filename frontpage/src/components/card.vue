@@ -140,7 +140,7 @@
     .item-item{
         width: 270px;
         height: 360px;
-        background: #f7f1f1;
+        background: #362727;
         align-items: center;
         border-radius: 5px;
         box-shadow: 1px 1px 5px black;

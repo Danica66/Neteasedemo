@@ -42,7 +42,7 @@ const handlelogout=async()=>{
       <div class="inner">
         <div class="logo-links">
           <div class="logo">
-            <a hidefocus="true" href="/#">网易云音乐</a>
+            <a hidefocus="true" href="javascript:void(0)">网易云音乐</a>
           </div>
           <nav class="nav-links">
             <RouterLink to="/">音乐大厅</RouterLink>

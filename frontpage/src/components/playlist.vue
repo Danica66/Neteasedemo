@@ -42,7 +42,6 @@
 .listbtn{
     color: white;
     padding: 5px 10px;
-    transition: all 0.3s ease;
     background-color: transparent;
     border: 0;
     border-radius: 20px;

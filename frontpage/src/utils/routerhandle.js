@@ -1,12 +1,7 @@
 import router from '@/router'  
-import {usePlayer} from '@/stores/player'
-
 
 //跳转放歌
-export const handlePlaySong=(item,index=0)=>{
-    const player=usePlayer()
-    player.setCurrentSongid(item.id)
-    player.setCurrentListIndex(index)
+export const handlePlaySong=()=>{
     router.push({
         name:'player'
     })
